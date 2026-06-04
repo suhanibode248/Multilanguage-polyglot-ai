@@ -1,62 +1,283 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Multi Language Voice Assistant</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polyglot AI — Multilingual Voice Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
 
-<div class="header">
-    <h2>🌐 Multi-Language Voice Assistant</h2>
+<!-- Ambient background orbs -->
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
 
-    <div class="controls">
-        <select id="language">
-            <option value="en">English</option>
-            <option value="hi">Hindi</option>
-            <option value="mr">Marathi</option>
-            <option value="fr">French</option>
-            <option value="es">Spanish</option>
-            <option value="de">German</option>
-            <option value="it">Italian</option>
-            <option value="pt">Portuguese</option>
-            <option value="ru">Russian</option>
-            <option value="ja">Japanese</option>
-            <option value="ko">Korean</option>
-            <option value="zh">Chinese</option>
-            <option value="ar">Arabic</option>
-            <option value="tr">Turkish</option>
-            <option value="te">Telugu</option>
-        </select>
+<!-- ===== HISTORY DRAWER ===== -->
+<div class="history-overlay" id="historyOverlay" onclick="toggleHistoryPanel()"></div>
+<aside class="history-drawer" id="historyDrawer">
+    <div class="drawer-header">
+        <h3>Chat History</h3>
+        <button class="drawer-close" onclick="toggleHistoryPanel()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+    </div>
+    <div class="history-list" id="historyPanel">
+        <div class="history-empty">No saved sessions yet.<br>Start chatting to save history.</div>
+    </div>
+</aside>
 
-        <button onclick="toggleTheme()">🌙</button>
+<!-- ===== SPEECH CONTROLS PANEL ===== -->
+<div class="speech-panel" id="speechPanel">
+    <div class="speech-panel-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.536 8.464a5 5 0 010 7.072M17.95 6.05a8 8 0 010 11.9"/></svg>
+        Voice Controls
+    </div>
+    <div class="speech-control-row">
+        <label>Speed</label>
+        <input type="range" id="ttsRate" min="0.5" max="2" step="0.1" value="1.0">
+        <span id="ttsRateVal">1.0×</span>
+    </div>
+    <div class="speech-control-row">
+        <label>Pitch</label>
+        <input type="range" id="ttsPitch" min="0.5" max="2" step="0.1" value="1.0">
+        <span id="ttsPitchVal">1.0</span>
     </div>
 </div>
 
-<div id="chatBox" class="chat-box">
-    <div class="bot">🤖 Hello! How can I help you?</div>
-</div>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <div class="logo-mark">P</div>
+        <span class="logo-text">Polyglot</span>
+    </div>
 
-<div class="control-panel">
+    <nav class="sidebar-nav">
+        <div class="nav-section-label">Interface</div>
+        <a class="nav-item active" href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            Chat
+        </a>
+        <a class="nav-item" href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+            Voice Lab
+        </a>
+        <a class="nav-item" href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+            Translate
+        </a>
+        <!-- History nav item -->
+        <a class="nav-item" href="#" onclick="toggleHistoryPanel(); return false;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            History
+        </a>
 
-    <button onclick="startListening()">🎤 Speak</button>
-    <button onclick="stopAll()">⏹ Stop</button>
-    <button onclick="speakLast()">🔊 Read</button>
+        <div class="nav-section-label" style="margin-top:1.5rem">Settings</div>
+        <a class="nav-item" href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+            Preferences
+        </a>
+    </nav>
 
-    <br><br>
+    <div class="sidebar-footer">
+        <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+            <div class="toggle-track">
+                <div class="toggle-thumb"></div>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </div>
+        </div>
+        <div class="user-chip">
+            <div class="user-avatar">AI</div>
+            <div class="user-info">
+                <span class="user-name">Polyglot</span>
+                <span class="user-role">v2.1 Pro</span>
+            </div>
+        </div>
+    </div>
+</aside>
 
-    <input type="text" id="textInput" placeholder="Type your message...">
-    <button onclick="sendText()">Send ➤</button>
+<!-- Main content -->
+<main class="main-content">
 
-    <br><br>
+    <!-- Top bar -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <div class="session-badge">
+                <span class="session-dot"></span>
+                Session Active
+            </div>
+            <h1 class="page-title">Multilingual Voice Chat</h1>
+        </div>
+        <div class="topbar-right">
+            <!-- Language selector -->
+            <div class="lang-select-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+                <select id="language" onchange="onLangChange()">
+                    <option value="en">🇺🇸 English</option>
+                    <option value="hi">🇮🇳 Hindi</option>
+                    <option value="mr">🇮🇳 Marathi</option>
+                    <option value="fr">🇫🇷 French</option>
+                    <option value="es">🇪🇸 Spanish</option>
+                    <option value="de">🇩🇪 German</option>
+                    <option value="it">🇮🇹 Italian</option>
+                    <option value="pt">🇵🇹 Portuguese</option>
+                    <option value="ru">🇷🇺 Russian</option>
+                    <option value="ja">🇯🇵 Japanese</option>
+                    <option value="ko">🇰🇷 Korean</option>
+                    <option value="zh">🇨🇳 Chinese</option>
+                    <option value="ar">🇸🇦 Arabic</option>
+                    <option value="tr">🇹🇷 Turkish</option>
+                    <option value="te">🇮🇳 Telugu</option>
+                </select>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
 
-    <label>
-        <input type="checkbox" id="autoTranslate" checked>
-        Auto Translate ON
-    </label>
+            <!-- Auto-translate toggle -->
+            <label class="translate-toggle">
+                <input type="checkbox" id="autoTranslate" checked onchange="onTranslateToggle(this)">
+                <div class="pill-track">
+                    <div class="pill-thumb"></div>
+                </div>
+                <span class="translate-label">Auto-translate</span>
+            </label>
 
-    <p id="status"></p>
-</div>
+            <!-- Export button -->
+            <div class="export-wrapper" id="exportWrapper">
+                <button class="btn-export" onclick="toggleExportMenu()" title="Export chat">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    Export
+                </button>
+                <div class="export-menu" id="exportMenu">
+                    <button onclick="exportChat('txt')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        Text file (.txt)
+                    </button>
+                    <button onclick="exportChat('pdf')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M10 12a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2a1 1 0 01-1-1v-4z"/></svg>
+                        PDF (print dialog)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats bar -->
+    <div class="stats-bar">
+        <div class="stat-chip" id="stat-lang">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+            <span id="active-lang-label">English</span>
+        </div>
+        <div class="stat-chip" id="stat-msgs">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            <span id="msg-count">0 messages</span>
+        </div>
+        <div class="stat-chip" id="stat-translate">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h10M4 18h7"/></svg>
+            <span id="translate-status">Translate ON</span>
+        </div>
+        <!-- Memory indicator -->
+        <div class="stat-chip stat-memory">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+            <span>Memory ON</span>
+        </div>
+        <!-- Speech controls toggle -->
+        <div class="stat-chip stat-voice-ctrl" onclick="toggleSpeechPanel()" style="cursor:pointer;" title="Voice speed & pitch">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.536 8.464a5 5 0 010 7.072M17.95 6.05a8 8 0 010 11.9M6.343 17.657a8 8 0 010-11.314"/></svg>
+            <span>Voice Controls</span>
+        </div>
+    </div>
+
+    <!-- Chat area -->
+    <div class="chat-wrapper">
+        <div id="chatBox" class="chat-box">
+            <!-- Welcome card -->
+            <div class="welcome-card">
+                <div class="welcome-orb">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h2>Polyglot AI</h2>
+                <p>Your intelligent multilingual voice assistant. Speak or type in any of 15 languages and get instant, natural responses.</p>
+                <div class="welcome-features">
+                    <div class="feature-pill">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                        Voice Input
+                    </div>
+                    <div class="feature-pill">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+                        15 Languages
+                    </div>
+                    <div class="feature-pill">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.536 8.464a5 5 0 010 7.072M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        Text-to-Speech
+                    </div>
+                    <div class="feature-pill">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        GPT-4o Mini
+                    </div>
+                    <div class="feature-pill">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+                        Multi-turn Memory
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice visualizer -->
+    <div class="voice-visualizer" id="voiceVisualizer">
+        <div class="wave-bars">
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+        <span id="listenLabel">Listening...</span>
+    </div>
+
+    <!-- Status strip -->
+    <div id="statusStrip" class="status-strip hidden">
+        <div class="status-inner">
+            <div class="status-dot-pulse"></div>
+            <span id="status"></span>
+        </div>
+    </div>
+
+    <!-- Input area -->
+    <div class="input-area">
+        <div class="input-row">
+            <div class="text-input-wrapper">
+                <textarea id="textInput" class="text-input" placeholder="Type a message or press Speak…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-icon btn-mic" id="micBtn" onclick="toggleMic()" title="Speak">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                </button>
+                <button class="btn-icon btn-repeat" onclick="speakLast()" title="Read last response">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.536 8.464a5 5 0 010 7.072M17.95 6.05a8 8 0 010 11.9M6.343 17.657a8 8 0 010-11.314M3.929 20.07a11 11 0 010-16.142M12 12v.01"/></svg>
+                </button>
+                <button class="btn-icon btn-stop" onclick="stopAll()" title="Stop">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                </button>
+                <button class="btn-send" onclick="sendText()" id="sendBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="input-footer">
+            <span class="footer-hint">Press <kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for new line</span>
+            <button class="btn-clear" onclick="clearChat()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                Clear chat
+            </button>
+        </div>
+    </div>
+
+</main>
 
 <script src="/static/script.js"></script>
 </body>
