@@ -1,16 +1,20 @@
 from flask import Flask, render_template, request, jsonify
 from openai import OpenAI
+from dotenv import load_dotenv
+import os
 import logging
+
+load_dotenv()
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # ✅ OpenRouter setup
 client = OpenAI(
-    api_key="",
+    api_key=os.getenv("OPENROUTER_API_KEY"),
     base_url="https://openrouter.ai/api/v1",
     default_headers={
-        "HTTP-Referer": "http://localhost:5000",
+        "HTTP-Referer": "https://multilanguage-polyglot-ai.vercel.app",
         "X-Title": "Polyglot Voice Assistant"
     }
 )
@@ -47,7 +51,6 @@ def chat():
 
         user_text = data.get('message', '').strip()
         target_lang = data.get('lang', 'en')
-        # history: list of {role, content} objects from the frontend
         history = data.get('history', [])
 
         if not user_text:
@@ -56,7 +59,6 @@ def chat():
         target_lang_full = lang_map.get(target_lang, "English")
         logging.info(f"[Chat] lang={target_lang_full} | history_len={len(history)} | msg={user_text[:60]}")
 
-        # Build messages: system + history + current user message
         system_prompt = {
             "role": "system",
             "content": (
@@ -65,12 +67,12 @@ def chat():
                 f"Never mix languages. "
                 f"Give helpful, accurate, and natural answers. "
                 f"Be concise unless the user asks for detail. "
-                f"You can answer questions, have conversations, explain topics, translate phrases, and assist with any task. "
+                f"You can answer questions, have conversations, explain topics, "
+                f"translate phrases, and assist with any task. "
                 f"You remember the full conversation history and can refer to earlier messages."
             )
         }
 
-        # Sanitize history to only include role/content
         safe_history = [
             {"role": m["role"], "content": m["content"]}
             for m in history
