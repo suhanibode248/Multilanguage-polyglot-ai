@@ -122,3 +122,4 @@ The project highlights the importance of multilingual systems in modern AI appli
 [1] Author, "Speech Recognition Systems," Journal/Conference, 2020  
 [2] Author, "Natural Language Processing Techniques," 2019  
 [3] https://www.speechrecognition.com  
+# Multilanguage-polyglot-ai
