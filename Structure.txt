@@ -1,0 +1,16 @@
+voice_assistant_project/
+│
+├── app.py                  # Flask backend — handles /chat and /health routes
+├── requirements.txt        # Python dependencies
+├── vercel.json             # Vercel deployment config
+├── .env                    # API keys (not committed to Git)
+├── .gitignore              # Git ignore rules
+├── README.md               # Project documentation
+│
+├── templates/
+│   └── index.html          # Main HTML page (frontend UI)
+│
+└── static/
+    ├── script.js           # Frontend logic (speech recognition, TTS, chat)
+    ├── style.css           # Styling and themes (dark/light mode)
+    └── output.mp3          # Placeholder audio file
