@@ -1,0 +1,105 @@
+================================================================
+       POLYGLOT VOICE ASSISTANT — PROJECT NOTES
+================================================================
+
+1. PROJECT DESCRIPTION
+-----------------------
+A multilingual AI voice assistant web app called "Polyglot".
+Users can speak or type in any supported language and receive
+AI-generated replies in that same language. Built with Flask
+(backend) and browser Web APIs (frontend).
+
+
+2. REQUIREMENTS
+---------------
+Python 3.8+
+Flask==3.0.0
+openai>=1.52.0
+python-dotenv==1.0.0
+
+API Keys needed:
+  - OPENROUTER_API_KEY  →  set in .env file
+
+Install:
+  pip install -r requirements.txt
+
+
+3. HOW TO RUN PROJECT
+----------------------
+1. Clone the repo
+2. Create a .env file and add:
+     OPENROUTER_API_KEY=your_key_here
+3. Install dependencies:
+     pip install -r requirements.txt
+4. Start the server:
+     python app.py
+5. Open browser → http://localhost:5000
+
+
+4. HOW IT WORKS (TECH FLOW)
+----------------------------
+User speaks/types
+    → Browser Web Speech API converts voice to text
+    → Text + selected language sent to Flask /chat endpoint
+    → Flask builds prompt and calls OpenRouter API (GPT-4o-mini)
+    → AI reply returned in the selected language
+    → Browser reads reply aloud using Web Speech Synthesis API
+
+
+5. FEATURES
+-----------
+- Voice input via browser microphone (Web Speech API)
+- Text-to-speech playback of AI replies
+- Supports 15 languages: English, Hindi, Marathi, French,
+  Spanish, German, Italian, Portuguese, Russian, Japanese,
+  Korean, Chinese, Arabic, Turkish, Telugu
+- Multi-turn conversation memory (history sent with each request)
+- Auto-translate toggle
+- Dark / Light theme toggle
+- Adjustable TTS speed and pitch
+- Deployed on Vercel
+
+
+6. COMMON ISSUES & FIXES
+--------------------------
+| Issue                        | Fix                                      |
+|------------------------------|------------------------------------------|
+| Mic not working              | Allow microphone permission in browser   |
+| No AI reply                  | Check OPENROUTER_API_KEY in .env         |
+| TTS not speaking             | Click anywhere on page first (autoplay)  |
+| Server not starting          | Ensure all pip packages are installed    |
+| Wrong language response      | Make sure correct language is selected   |
+
+
+7. SUPPORTED BROWSERS
+----------------------
+- Google Chrome        ✅ (recommended)
+- Microsoft Edge       ✅
+- Firefox              ⚠️  (limited Web Speech API support)
+- Safari               ⚠️  (partial support)
+
+Note: Web Speech API (mic + TTS) works best in Chrome/Edge.
+
+
+8. TIPS FOR BEST RESULTS
+-------------------------
+- Use Chrome for the best voice recognition experience.
+- Speak clearly and at a normal pace.
+- Use a quiet environment for better mic accuracy.
+- Select the correct language before speaking.
+- Keep conversation history short for faster responses.
+
+
+9. AUTHOR
+----------
+Name     :  Suhani Bode
+Course   :  Computer Science and Engineering (Data Science)
+Date     :  March 2026
+
+
+10. PROJECT LINK
+-----------------
+GitHub   :  https://github.com/suhanibode248/Multilanguage-polyglot-ai
+Live App :  https://multilanguage-polyglot-ai.vercel.app
+
+================================================================
